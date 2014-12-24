@@ -1,5 +1,8 @@
 <?php namespace Zizaco\Confide;
 
+use Illuminate\Support\Facades\Schema as Schema;
+use Illuminate\Support\Facades\Config as Config;
+
 /**
  * A service that abstracts all database interactions that happens
  * in Confide using Eloquent.
