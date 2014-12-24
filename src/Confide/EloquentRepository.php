@@ -24,7 +24,14 @@ class EloquentRepository implements RepositoryInterface
      * @var string
      */
     public $model;
-
+    
+    /**
+     * Name of the identity field. Possible values (email|username)     * 
+     * 
+     * @var string
+     */
+    protected $identityField = 'email';
+    
     /**
      * Create a new ConfideRepository
      *
@@ -33,6 +40,11 @@ class EloquentRepository implements RepositoryInterface
     public function __construct($app = null)
     {
         $this->app = $app ?: app();
+        
+        // TODO: Move this to config
+        if ( Schema::hasColumn(Config::get('auth.table'), 'username') ) {
+            $this->identityField = 'username';
+        }
     }
 
     /**
@@ -65,6 +77,10 @@ class EloquentRepository implements RepositoryInterface
     public function getUserByIdentity($identity)
     {
         $user = $this->model();
+        
+        if ($this->identityField == 'email') {
+            unset($identity['username']);
+        }
 
         $firstWhere = true;
         foreach ($identity as $attribute => $value) {
